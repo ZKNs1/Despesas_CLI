@@ -5,10 +5,13 @@ ARQUIVO_GASTOS = "gastos.json"
 
 parser = argparse.ArgumentParser(description="Controle de Despesas com CLI")
 
-parser.add_argument("acao", choices=["adicionar", "visualizar"], help="Acoes disponiveis") 
-parser.add_argument("nome",type=str, nargs="?", help="Nome do gasto") # nargs="?" torna o argumento opcional 
-parser.add_argument("valor", type=float, nargs="?", help="Custo do gasto")
+parser.add_argument("acao", choices=["adicionar", "visualizar", "editar"], help="Ações disponíveis")
+parser.add_argument("--id", type=int, help="ID do produto a ser editado") 
+parser.add_argument("--nome", type=str, help="Nome do gasto")  
+parser.add_argument("--valor", type=float, help="Custo do gasto")  
 args = parser.parse_args()
+
+
 
 # Função para carregar gastos do arquivo
 def carregar_gastos():
@@ -31,6 +34,18 @@ def adicionar(nome, valor):
     salvar_gastos(gastos) 
     print(f"{nome} foi adicionado")
 
+# Função para editar valor do gasto
+def editar(id_gasto, novo_valor):
+    gastos = carregar_gastos()
+    for gasto in gastos:
+        if gasto["id"] == id_gasto: # Procura pelo ID
+            gasto["valor"] = novo_valor  # Atualiza o valor
+            salvar_gastos(gastos)
+            print(f"Gasto [{id_gasto}] atualizado para {novo_valor}")
+            return
+
+    print(f"Gasto com ID {id_gasto} não encontrado.")
+
 # Função para visiualizar os gastos
 def visualizar():
     gastos = carregar_gastos() # Carregar a lista
@@ -40,9 +55,18 @@ def visualizar():
         for gasto in gastos:
             print(f"{gasto['id']} | {gasto['nome']}  {gasto['valor']}")
 
+
+
 #Ações
 if args.acao == "adicionar":
     adicionar(args.nome, args.valor) # Chama a função e passa os argumentos
 
+elif args.acao == "editar":
+    if args.id is None or args.valor is None:
+        print("Erro: Para editar, forneça um ID e um novo valor.")
+    else:
+        editar(args.id, args.valor)
+
 elif args.acao == "visualizar":
     visualizar() # Chama a função visualizar
+
