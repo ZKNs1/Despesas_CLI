@@ -7,6 +7,11 @@
     {
         "id": 2,
         "nome": "donut",
-        "valor": 3.0
+        "valor": 3.5
+    },
+    {
+        "id": 3,
+        "nome": "pizza",
+        "valor": 30.0
     }
 ]
