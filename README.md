@@ -36,7 +36,7 @@ python main.py editar --id 1 --valor 39.5
 
 ## Estrutura do Projeto
 ```
-controle-despesas-cli/
+despesas/
 ├── main.py          # Código principal
 ├── gastos.json      # Arquivo onde os gastos são armazenados
 ├── README.md        # Documentação do projeto
