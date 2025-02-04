@@ -5,8 +5,8 @@ ARQUIVO_GASTOS = "gastos.json"
 
 parser = argparse.ArgumentParser(description="Controle de Despesas com CLI")
 
-parser.add_argument("acao", choices=["adicionar", "visualizar", "editar"], help="Ações disponíveis")
-parser.add_argument("--id", type=int, help="ID do produto a ser editado") 
+parser.add_argument("acao", choices=["adicionar", "visualizar", "editar", "excluir"], help="Ações disponíveis")
+parser.add_argument("--id", type=int, help="ID do gasto") 
 parser.add_argument("--nome", type=str, help="Nome do gasto")  
 parser.add_argument("--valor", type=float, help="Custo do gasto")  
 args = parser.parse_args()
@@ -46,6 +46,18 @@ def editar(id_gasto, novo_valor):
 
     print(f"Gasto com ID {id_gasto} não encontrado.")
 
+# Função para deletar um gasto
+def deletar(id_gasto):
+    gastos = carregar_gastos()
+    gastos = [gasto for gasto in gastos if gasto["id"] != id_gasto]  # Remove o gasto com o ID fornecido
+
+    # Reorganiza os IDs para manter a sequência correta
+    for index, gasto in enumerate(gastos, start=1):
+        gasto["id"] = index
+
+    salvar_gastos(gastos)
+    print(f"Gasto [{id_gasto}] foi removido.")
+
 # Função para visiualizar os gastos
 def visualizar():
     gastos = carregar_gastos() # Carregar a lista
@@ -65,7 +77,13 @@ elif args.acao == "editar":
     if args.id is None or args.valor is None:
         print("Erro: Para editar, forneça um ID e um novo valor.")
     else:
-        editar(args.id, args.valor)
+        editar(args.id, args.valor) 
+
+elif args.acao == "excluir":
+    if args.id is None:
+        print("Erro: para deletar forneça um ID")
+    else:
+        deletar(args.id)
 
 elif args.acao == "visualizar":
     visualizar() # Chama a função visualizar
